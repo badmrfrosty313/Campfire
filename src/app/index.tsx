@@ -1,4 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { router } from 'expo-router';
 
 export default function HomeScreen() {
   return (
@@ -14,7 +15,10 @@ export default function HomeScreen() {
       </Text>
 
       <View style={styles.buttonGroup}>
-        <Pressable style={styles.primaryButton}>
+        <Pressable
+          style={styles.primaryButton}
+          onPress={() => router.push('/create')}
+        >
           <Text style={styles.primaryButtonText}>
             START A CAMPFIRE
           </Text>
