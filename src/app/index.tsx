@@ -1,98 +1,101 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 export default function HomeScreen() {
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+    <View style={styles.container}>
+      <View style={styles.firePlaceholder}>
+        <Text style={styles.fireEmoji}>🔥</Text>
+      </View>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
+      <Text style={styles.title}>CAMPFIRE</Text>
 
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
+      <Text style={styles.subtitle}>
+        Less scrolling. More stories.
+      </Text>
 
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+      <View style={styles.buttonGroup}>
+        <Pressable style={styles.primaryButton}>
+          <Text style={styles.primaryButtonText}>
+            START A CAMPFIRE
+          </Text>
+        </Pressable>
+
+        <Pressable style={styles.secondaryButton}>
+          <Text style={styles.secondaryButtonText}>
+            JOIN A CAMPFIRE
+          </Text>
+        </Pressable>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
-  },
-  heroSection: {
+    backgroundColor: '#12100E',
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+    paddingHorizontal: 24,
   },
+
+  firePlaceholder: {
+    marginBottom: 18,
+  },
+
+  fireEmoji: {
+    fontSize: 72,
+  },
+
   title: {
+    fontSize: 42,
+    fontWeight: '900',
+    letterSpacing: 4,
+    color: '#FFF4E6',
+  },
+
+  subtitle: {
+    marginTop: 10,
+    marginBottom: 48,
+    fontSize: 18,
+    color: '#C9B9A8',
     textAlign: 'center',
   },
-  code: {
-    textTransform: 'uppercase',
+
+  buttonGroup: {
+    width: '100%',
+    maxWidth: 420,
+    gap: 16,
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+
+  primaryButton: {
+    backgroundColor: '#E85D24',
+    paddingVertical: 18,
+    paddingHorizontal: 24,
+    borderRadius: 14,
+    alignItems: 'center',
+  },
+
+  primaryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 17,
+    fontWeight: '800',
+    letterSpacing: 1,
+  },
+
+  secondaryButton: {
+    borderWidth: 2,
+    borderColor: '#E85D24',
+    paddingVertical: 18,
+    paddingHorizontal: 24,
+    borderRadius: 14,
+    alignItems: 'center',
+  },
+
+  secondaryButtonText: {
+    color: '#FFB36B',
+    fontSize: 17,
+    fontWeight: '800',
+    letterSpacing: 1,
   },
 });
