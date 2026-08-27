@@ -1,5 +1,12 @@
 import { useLocalSearchParams } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+    Image,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
+} from 'react-native';
 
 export default function CampfireScreen() {
   const { campers, timeNeeded } = useLocalSearchParams<{
@@ -22,57 +29,77 @@ export default function CampfireScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>YOUR FIRE</Text>
-        <Text style={styles.titleAccent}>IS LIT</Text>
-      </View>
-
-      <View style={styles.scene}>
-        <Text style={styles.fire}>🔥</Text>
-        <Text style={styles.sceneText}>PIXEL CAMPFIRE COMING NEXT</Text>
-      </View>
-
-      <View style={styles.sessionCard}>
-        <View style={styles.sessionItem}>
-          <Text style={styles.sessionIcon}>👥</Text>
-          <Text style={styles.sessionValue}>{campers}</Text>
-          <Text style={styles.sessionLabel}>CAMPERS</Text>
+    <ScrollView
+      style={styles.scrollView}
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}
+    >
+      <View style={styles.content}>
+        <View style={styles.header}>
+          <Text style={styles.title}>YOUR FIRE</Text>
+          <Text style={styles.titleAccent}>IS LIT</Text>
         </View>
 
-        <View style={styles.divider} />
-
-        <View style={styles.sessionItem}>
-          <Text style={styles.sessionIcon}>◷</Text>
-          <Text style={styles.sessionValue}>{displayTime}</Text>
-          <Text style={styles.sessionLabel}>{timeLabel}</Text>
+        <View style={styles.scene}>
+          <Image
+            source={require('../../assets/images/campfire-scene.png')}
+            style={styles.campfireImage}
+            resizeMode="contain"
+          />
         </View>
-      </View>
 
-      <Pressable
-        style={styles.challengeButton}
-        onPress={drawFirstChallenge}
-      >
-        <Text style={styles.challengeButtonText}>
-          🔥 DRAW THE FIRST CHALLENGE
-        </Text>
-      </Pressable>
-    </View>
+        <View style={styles.sessionCard}>
+          <View style={styles.sessionItem}>
+            <Text style={styles.sessionIcon}>👥</Text>
+            <Text style={styles.sessionValue}>{campers}</Text>
+            <Text style={styles.sessionLabel}>CAMPERS</Text>
+          </View>
+
+          <View style={styles.divider} />
+
+          <View style={styles.sessionItem}>
+            <Text style={styles.sessionIcon}>◷</Text>
+            <Text style={styles.sessionValue}>{displayTime}</Text>
+            <Text style={styles.sessionLabel}>{timeLabel}</Text>
+          </View>
+        </View>
+
+        <Pressable
+          style={styles.challengeButton}
+          onPress={drawFirstChallenge}
+        >
+          <Text style={styles.challengeButtonText}>
+            🔥 DRAW THE FIRST CHALLENGE
+          </Text>
+        </Pressable>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  scrollView: {
     flex: 1,
     backgroundColor: '#090806',
+  },
+
+  container: {
+    flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 24,
+    paddingVertical: 32,
+  },
+
+  content: {
+    width: '100%',
+    maxWidth: 760,
+    alignItems: 'center',
   },
 
   header: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 16,
   },
 
   title: {
@@ -91,23 +118,16 @@ const styles = StyleSheet.create({
 
   scene: {
     width: '100%',
-    maxWidth: 600,
-    height: 280,
+    height: 360,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
+    marginBottom: 18,
   },
 
-  fire: {
-    fontSize: 130,
-  },
-
-  sceneText: {
-    color: '#6D5848',
-    fontSize: 12,
-    fontWeight: '800',
-    letterSpacing: 2,
-    marginTop: 12,
+  campfireImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 18,
   },
 
   sessionCard: {
@@ -124,6 +144,7 @@ const styles = StyleSheet.create({
   sessionItem: {
     flex: 1,
     alignItems: 'center',
+    paddingHorizontal: 8,
   },
 
   divider: {
@@ -148,6 +169,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: 2,
     marginTop: 4,
+    textAlign: 'center',
   },
 
   challengeButton: {
@@ -155,6 +177,7 @@ const styles = StyleSheet.create({
     maxWidth: 600,
     backgroundColor: '#F15A24',
     paddingVertical: 20,
+    paddingHorizontal: 20,
     borderRadius: 16,
     alignItems: 'center',
   },
@@ -164,5 +187,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '900',
     letterSpacing: 1,
+    textAlign: 'center',
   },
 });
