@@ -11,6 +11,18 @@ export default function CreateCampfireScreen() {
 
   const canContinue = campers !== null && timeNeeded !== null;
 
+  const lightFire = () => {
+    if (!campers || !timeNeeded) return;
+
+    router.push({
+      pathname: '/campfire',
+      params: {
+        campers,
+        timeNeeded,
+      },
+    });
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.eyebrow}>START A CAMPFIRE</Text>
@@ -79,12 +91,7 @@ export default function CreateCampfireScreen() {
           styles.primaryButton,
           !canContinue && styles.primaryButtonDisabled,
         ]}
-        onPress={() => {
-          console.log({
-            campers,
-            timeNeeded,
-          });
-        }}
+        onPress={lightFire}
       >
         <Text style={styles.primaryButtonText}>LIGHT THE FIRE 🔥</Text>
       </Pressable>
