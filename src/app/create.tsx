@@ -1,6 +1,12 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 const camperOptions = ['2', '3–4', '5–8', '9+'];
 const timeOptions = ['5 MIN', '15 MIN', '30 MIN', 'KEEP IT BURNING'];
@@ -24,91 +30,108 @@ export default function CreateCampfireScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.eyebrow}>START A CAMPFIRE</Text>
+    <ScrollView
+      style={styles.scrollView}
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}
+    >
+      <View style={styles.content}>
+        <Text style={styles.eyebrow}>START A CAMPFIRE</Text>
 
-      <Text style={styles.title}>Who’s gathering around?</Text>
+        <Text style={styles.title}>Who’s gathering around?</Text>
 
-      <Text style={styles.sectionLabel}>Campers</Text>
+        <Text style={styles.sectionLabel}>Campers</Text>
 
-      <View style={styles.optionGrid}>
-        {camperOptions.map((option) => {
-          const selected = campers === option;
+        <View style={styles.optionGrid}>
+          {camperOptions.map((option) => {
+            const selected = campers === option;
 
-          return (
-            <Pressable
-              key={option}
-              style={[
-                styles.optionButton,
-                selected && styles.optionButtonSelected,
-              ]}
-              onPress={() => setCampers(option)}
-            >
-              <Text
+            return (
+              <Pressable
+                key={option}
                 style={[
-                  styles.optionText,
-                  selected && styles.optionTextSelected,
+                  styles.optionButton,
+                  selected && styles.optionButtonSelected,
                 ]}
+                onPress={() => setCampers(option)}
               >
-                {option}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </View>
+                <Text
+                  style={[
+                    styles.optionText,
+                    selected && styles.optionTextSelected,
+                  ]}
+                >
+                  {option}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
 
-      <Text style={styles.sectionLabel}>How long have you got?</Text>
+        <Text style={styles.sectionLabel}>How long have you got?</Text>
 
-      <View style={styles.optionGrid}>
-        {timeOptions.map((option) => {
-          const selected = timeNeeded === option;
+        <View style={styles.optionGrid}>
+          {timeOptions.map((option) => {
+            const selected = timeNeeded === option;
 
-          return (
-            <Pressable
-              key={option}
-              style={[
-                styles.optionButton,
-                selected && styles.optionButtonSelected,
-              ]}
-              onPress={() => setTimeNeeded(option)}
-            >
-              <Text
+            return (
+              <Pressable
+                key={option}
                 style={[
-                  styles.optionText,
-                  selected && styles.optionTextSelected,
+                  styles.optionButton,
+                  selected && styles.optionButtonSelected,
                 ]}
+                onPress={() => setTimeNeeded(option)}
               >
-                {option}
-              </Text>
-            </Pressable>
-          );
-        })}
+                <Text
+                  style={[
+                    styles.optionText,
+                    selected && styles.optionTextSelected,
+                  ]}
+                >
+                  {option}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+
+        <Pressable
+          disabled={!canContinue}
+          style={[
+            styles.primaryButton,
+            !canContinue && styles.primaryButtonDisabled,
+          ]}
+          onPress={lightFire}
+        >
+          <Text style={styles.primaryButtonText}>LIGHT THE FIRE 🔥</Text>
+        </Pressable>
+
+        <Pressable style={styles.backButton} onPress={() => router.back()}>
+          <Text style={styles.backButtonText}>BACK</Text>
+        </Pressable>
       </View>
-
-      <Pressable
-        disabled={!canContinue}
-        style={[
-          styles.primaryButton,
-          !canContinue && styles.primaryButtonDisabled,
-        ]}
-        onPress={lightFire}
-      >
-        <Text style={styles.primaryButtonText}>LIGHT THE FIRE 🔥</Text>
-      </Pressable>
-
-      <Pressable style={styles.backButton} onPress={() => router.back()}>
-        <Text style={styles.backButtonText}>BACK</Text>
-      </Pressable>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  scrollView: {
     flex: 1,
     backgroundColor: '#12100E',
+  },
+
+  container: {
+    flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: 24,
+    paddingVertical: 32,
+  },
+
+  content: {
+    width: '100%',
+    maxWidth: 760,
+    alignSelf: 'center',
   },
 
   eyebrow: {
