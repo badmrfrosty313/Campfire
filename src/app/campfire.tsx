@@ -6,6 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from 'react-native';
 
@@ -29,6 +30,8 @@ type CampfirePhase =
   | 'finished';
 
 export default function CampfireScreen() {
+  const { height: windowHeight } = useWindowDimensions();
+
   const { campers, timeNeeded } = useLocalSearchParams<{
     campers: string;
     timeNeeded: string;
@@ -71,6 +74,11 @@ export default function CampfireScreen() {
     timeNeeded === 'KEEP IT BURNING'
       ? 'KEEP IT BURNING'
       : 'MINUTES';
+
+  const discussionScreenHeight = Math.max(
+    windowHeight - 64,
+    0,
+  );
 
   useEffect(() => {
     if (phase !== 'discussion') {
@@ -161,10 +169,7 @@ export default function CampfireScreen() {
           <>
             <View style={styles.header}>
               <Text style={styles.title}>YOUR FIRE</Text>
-
-              <Text style={styles.titleAccent}>
-                IS LIT
-              </Text>
+              <Text style={styles.titleAccent}>IS LIT</Text>
             </View>
 
             <View style={styles.scene}>
@@ -179,33 +184,17 @@ export default function CampfireScreen() {
 
             <View style={styles.sessionCard}>
               <View style={styles.sessionItem}>
-                <Text style={styles.sessionIcon}>
-                  👥
-                </Text>
-
-                <Text style={styles.sessionValue}>
-                  {campers}
-                </Text>
-
-                <Text style={styles.sessionLabel}>
-                  CAMPERS
-                </Text>
+                <Text style={styles.sessionIcon}>👥</Text>
+                <Text style={styles.sessionValue}>{campers}</Text>
+                <Text style={styles.sessionLabel}>CAMPERS</Text>
               </View>
 
               <View style={styles.divider} />
 
               <View style={styles.sessionItem}>
-                <Text style={styles.sessionIcon}>
-                  ◷
-                </Text>
-
-                <Text style={styles.sessionValue}>
-                  {displayTime}
-                </Text>
-
-                <Text style={styles.sessionLabel}>
-                  {timeLabel}
-                </Text>
+                <Text style={styles.sessionIcon}>◷</Text>
+                <Text style={styles.sessionValue}>{displayTime}</Text>
+                <Text style={styles.sessionLabel}>{timeLabel}</Text>
               </View>
             </View>
 
@@ -253,7 +242,10 @@ export default function CampfireScreen() {
 
         {phase === 'discussion' && (
           <Pressable
-            style={styles.phoneDownScreen}
+            style={[
+              styles.phoneDownScreen,
+              { minHeight: discussionScreenHeight },
+            ]}
             onPress={failDiscussion}
           >
             <Text style={styles.phoneDownFire}>🔥</Text>
@@ -272,8 +264,7 @@ export default function CampfireScreen() {
 
             {sessionRemaining !== null && (
               <Text style={styles.sessionRemainingText}>
-                {formatTime(sessionRemaining)} left in this
-                Campfire
+                {formatTime(sessionRemaining)} left in this Campfire
               </Text>
             )}
 
@@ -578,7 +569,6 @@ const styles = StyleSheet.create({
 
   phoneDownScreen: {
     width: '100%',
-    minHeight: 600,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -616,6 +606,7 @@ const styles = StyleSheet.create({
     color: '#4D392C',
     fontSize: 13,
     fontWeight: '700',
+    textAlign: 'center',
   },
 
   warningText: {
@@ -623,6 +614,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '700',
     marginTop: 24,
+    textAlign: 'center',
   },
 
   failureIcon: {
