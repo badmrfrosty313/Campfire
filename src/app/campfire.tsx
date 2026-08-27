@@ -1,20 +1,24 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
-    Image,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
 
+import { questions } from '../data/questions';
 import {
-    questions,
-    type CampfireQuestion,
-} from '../data/questions';
-
-const DISCUSSION_SECONDS = 2 * 60;
+  DISCUSSION_SECONDS,
+  canDrawNextQuestion,
+  formatTime,
+  getDiscussionLength,
+  getPhaseAfterDiscussion,
+  getSessionSeconds,
+  shuffleQuestions,
+} from '../utils/campfire';
 
 type CampfirePhase =
   | 'intro'
@@ -24,58 +28,12 @@ type CampfirePhase =
   | 'success'
   | 'finished';
 
-function shuffleQuestions(items: CampfireQuestion[]) {
-  const shuffled = [...items];
-
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-
-    [shuffled[i], shuffled[j]] = [
-      shuffled[j],
-      shuffled[i],
-    ];
-  }
-
-  return shuffled;
-}
-
-function getSessionSeconds(timeNeeded: string | undefined) {
-  if (timeNeeded === '5 MIN') {
-    return 5 * 60;
-  }
-
-  if (timeNeeded === '15 MIN') {
-    return 15 * 60;
-  }
-
-  if (timeNeeded === '30 MIN') {
-    return 30 * 60;
-  }
-
-  return null;
-}
-
-function formatTime(seconds: number) {
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-
-  return `${minutes}:${remainingSeconds
-    .toString()
-    .padStart(2, '0')}`;
-}
-
 export default function CampfireScreen() {
   const { campers, timeNeeded } = useLocalSearchParams<{
     campers: string;
     timeNeeded: string;
   }>();
 
-  /*
-   * Shuffle the complete question deck once when this
-   * Campfire session is created.
-   *
-   * The deck will not reshuffle every time React renders.
-   */
   const [questionDeck] = useState(() =>
     shuffleQuestions(questions),
   );
@@ -120,15 +78,7 @@ export default function CampfireScreen() {
     }
 
     if (discussionRemaining <= 0) {
-      if (
-        sessionRemaining !== null &&
-        sessionRemaining <= 0
-      ) {
-        setPhase('finished');
-      } else {
-        setPhase('success');
-      }
-
+      setPhase(getPhaseAfterDiscussion(sessionRemaining));
       return;
     }
 
@@ -159,19 +109,8 @@ export default function CampfireScreen() {
   };
 
   const startDiscussion = () => {
-    let discussionTime = DISCUSSION_SECONDS;
-
-    /*
-     * If there is less time left in the overall Campfire
-     * than a normal discussion round, use only the
-     * remaining session time.
-     */
-    if (
-      sessionRemaining !== null &&
-      sessionRemaining < DISCUSSION_SECONDS
-    ) {
-      discussionTime = sessionRemaining;
-    }
+    const discussionTime =
+      getDiscussionLength(sessionRemaining);
 
     setDiscussionLength(discussionTime);
     setDiscussionRemaining(discussionTime);
@@ -188,14 +127,12 @@ export default function CampfireScreen() {
 
   const drawNextQuestion = () => {
     if (
-      sessionRemaining !== null &&
-      sessionRemaining <= 0
+      !canDrawNextQuestion(
+        sessionRemaining,
+        currentIndex,
+        questionDeck.length,
+      )
     ) {
-      setPhase('finished');
-      return;
-    }
-
-    if (currentIndex >= questionDeck.length - 1) {
       setPhase('finished');
       return;
     }
