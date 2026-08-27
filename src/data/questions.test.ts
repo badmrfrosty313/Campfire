@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { questions } from './questions';
 
 describe('Campfire question deck', () => {
@@ -11,12 +12,19 @@ describe('Campfire question deck', () => {
   });
 
   it('has unique prompts', () => {
-    const prompts = questions.map((question) => question.prompt.trim().toLowerCase());
+    const prompts = questions.map((question) =>
+      question.prompt.trim().toLowerCase(),
+    );
+
     expect(new Set(prompts).size).toBe(prompts.length);
   });
 
   it('has no blank prompts', () => {
-    expect(questions.every((question) => question.prompt.trim().length > 0)).toBe(true);
+    expect(
+      questions.every(
+        (question) => question.prompt.trim().length > 0,
+      ),
+    ).toBe(true);
   });
 
   it('only uses supported categories', () => {
@@ -29,6 +37,10 @@ describe('Campfire question deck', () => {
       'personal',
     ]);
 
-    expect(questions.every((question) => categories.has(question.category))).toBe(true);
+    expect(
+      questions.every((question) =>
+        categories.has(question.category),
+      ),
+    ).toBe(true);
   });
 });
