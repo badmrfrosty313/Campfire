@@ -1,5 +1,5 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 export default function HomeScreen() {
   return (
@@ -14,22 +14,14 @@ export default function HomeScreen() {
         Less scrolling. More stories.
       </Text>
 
-      <View style={styles.buttonGroup}>
-        <Pressable
-          style={styles.primaryButton}
-          onPress={() => router.push('/create')}
-        >
-          <Text style={styles.primaryButtonText}>
-            START A CAMPFIRE
-          </Text>
-        </Pressable>
-
-        <Pressable style={styles.secondaryButton}>
-          <Text style={styles.secondaryButtonText}>
-            JOIN A CAMPFIRE
-          </Text>
-        </Pressable>
-      </View>
+      <Pressable
+        style={styles.primaryButton}
+        onPress={() => router.push('/create')}
+      >
+        <Text style={styles.primaryButtonText}>
+          START A CAMPFIRE
+        </Text>
+      </Pressable>
     </View>
   );
 }
@@ -66,13 +58,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  buttonGroup: {
+  primaryButton: {
     width: '100%',
     maxWidth: 420,
-    gap: 16,
-  },
-
-  primaryButton: {
     backgroundColor: '#E85D24',
     paddingVertical: 18,
     paddingHorizontal: 24,
@@ -82,22 +70,6 @@ const styles = StyleSheet.create({
 
   primaryButtonText: {
     color: '#FFFFFF',
-    fontSize: 17,
-    fontWeight: '800',
-    letterSpacing: 1,
-  },
-
-  secondaryButton: {
-    borderWidth: 2,
-    borderColor: '#E85D24',
-    paddingVertical: 18,
-    paddingHorizontal: 24,
-    borderRadius: 14,
-    alignItems: 'center',
-  },
-
-  secondaryButtonText: {
-    color: '#FFB36B',
     fontSize: 17,
     fontWeight: '800',
     letterSpacing: 1,

@@ -21,7 +21,7 @@ type CampfirePhase =
   | 'question'
   | 'discussion'
   | 'failed'
-  | 'between'
+  | 'success'
   | 'finished';
 
 function shuffleQuestions(items: CampfireQuestion[]) {
@@ -70,6 +70,12 @@ export default function CampfireScreen() {
     timeNeeded: string;
   }>();
 
+  /*
+   * Shuffle the complete question deck once when this
+   * Campfire session is created.
+   *
+   * The deck will not reshuffle every time React renders.
+   */
   const [questionDeck] = useState(() =>
     shuffleQuestions(questions),
   );
@@ -120,7 +126,7 @@ export default function CampfireScreen() {
       ) {
         setPhase('finished');
       } else {
-        setPhase('between');
+        setPhase('success');
       }
 
       return;
@@ -155,6 +161,11 @@ export default function CampfireScreen() {
   const startDiscussion = () => {
     let discussionTime = DISCUSSION_SECONDS;
 
+    /*
+     * If there is less time left in the overall Campfire
+     * than a normal discussion round, use only the
+     * remaining session time.
+     */
     if (
       sessionRemaining !== null &&
       sessionRemaining < DISCUSSION_SECONDS
@@ -191,6 +202,10 @@ export default function CampfireScreen() {
 
     setCurrentIndex((current) => current + 1);
     setPhase('question');
+  };
+
+  const endCampfire = () => {
+    setPhase('finished');
   };
 
   const startAnotherCampfire = () => {
@@ -371,16 +386,25 @@ export default function CampfireScreen() {
           </>
         )}
 
-        {phase === 'between' && (
+        {phase === 'success' && (
           <>
-            <Text style={styles.betweenFire}>🔥</Text>
+            <Text style={styles.successFire}>🔥</Text>
 
-            <Text style={styles.betweenTitle}>
-              KEEP IT BURNING
+            <Text style={styles.successEyebrow}>
+              CAMPFIRE COMPLETE
             </Text>
 
-            <Text style={styles.betweenText}>
-              Ready for another one?
+            <Text style={styles.successTitle}>
+              NICE. YOU MADE IT.
+            </Text>
+
+            <Text style={styles.successText}>
+              You made it {formatTime(discussionLength)} without
+              feeding the rectangle.
+            </Text>
+
+            <Text style={styles.successPrompt}>
+              Keep the fire going?
             </Text>
 
             <Pressable
@@ -388,7 +412,16 @@ export default function CampfireScreen() {
               onPress={drawNextQuestion}
             >
               <Text style={styles.primaryButtonText}>
-                DRAW NEXT QUESTION
+                🔥 DRAW ANOTHER QUESTION
+              </Text>
+            </Pressable>
+
+            <Pressable
+              style={styles.secondaryButton}
+              onPress={endCampfire}
+            >
+              <Text style={styles.secondaryButtonText}>
+                LET IT BURN OUT
               </Text>
             </Pressable>
           </>
@@ -556,6 +589,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '900',
     letterSpacing: 1,
+    textAlign: 'center',
   },
 
   questionEyebrow: {
@@ -689,23 +723,38 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
 
-  betweenFire: {
-    fontSize: 64,
-    marginBottom: 20,
+  successFire: {
+    fontSize: 72,
+    marginBottom: 18,
   },
 
-  betweenTitle: {
-    color: '#FFF4E6',
-    fontSize: 40,
+  successEyebrow: {
+    color: '#F15A24',
+    fontSize: 14,
     fontWeight: '900',
     letterSpacing: 2,
-    marginBottom: 12,
-    textAlign: 'center',
+    marginBottom: 16,
   },
 
-  betweenText: {
+  successTitle: {
+    color: '#FFF4E6',
+    fontSize: 42,
+    fontWeight: '900',
+    textAlign: 'center',
+    marginBottom: 18,
+  },
+
+  successText: {
     color: '#A98C75',
-    fontSize: 18,
+    fontSize: 20,
+    fontWeight: '800',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+
+  successPrompt: {
+    color: '#6D5848',
+    fontSize: 16,
     fontWeight: '700',
     marginBottom: 32,
   },
